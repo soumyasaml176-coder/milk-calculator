@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Milk Rate Calculator - Pragati & More</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 25px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 5px;
+        }
+        
+        .header p {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px 25px;
+        }
+        
+        .form-group {
+            margin-bottom: 18px;
+        }
+        
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 15px;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .input-row .form-group {
+            margin-bottom: 0;
+        }
+        
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-section {
+            margin-top: 25px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .result-item {
+            margin-bottom: 15px;
+        }
+        
+        .result-item:last-child {
+            margin-bottom: 0;
+        }
+        
+        .result-label {
+            font-size: 13px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        
+        .result-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: #667eea;
+            margin-top: 5px;
+        }
+        
+        .result-value.secondary {
+            font-size: 18px;
+            color: #764ba2;
+        }
+        
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 15px;
+            border-left: 4px solid #c33;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .success-message {
+            background: #efe;
+            color: #3c3;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 15px;
+            border-left: 4px solid #3c3;
+            display: none;
+        }
+        
+        .success-message.show {
+            display: block;
+        }
+        
+        .info-box {
+            background: #f0f4ff;
+            padding: 12px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #555;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .info-box strong {
+            color: #667eea;
+        }
+        
+        .divider {
+            height: 1px;
+            background: #e0e0e0;
+            margin: 20px 0;
+        }
+        
+        .history-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .history-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        
+        .history-item {
+            background: #f8f9fa;
+            padding: 10px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .history-item .price {
+            font-weight: 700;
+            color: #667eea;
+        }
+        
+        .clear-history {
+            font-size: 12px;
+            color: #999;
+            cursor: pointer;
+            text-decoration: underline;
+            margin-top: 8px;
+        }
+        
+        .clear-history:hover {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>🥛 Milk Rate Calculator</h1>
+        <p>Pragati & Multi-Model Pricing Support</p>
+    </div>
+    
+    <div class="content">
+        <div class="form-group">
+            <label for="model">Pricing Model</label>
+            <select id="model" onchange="updateModelInfo()">
+                <option value="pragati">Pragati Milk Products (Latest)</option>
+                <option value="formula">Simple Formula (FAT × 6.5 + SNF × 1.8 - 0.05)</option>
+            </select>
+        </div>
+        
+        <div id="modelInfo" class="info-box"></div>
+        
+        <div class="input-row">
+            <div class="form-group">
+                <label for="fat">FAT %</label>
+                <input type="number" id="fat" step="0.01" placeholder="e.g., 4.50" min="0" max="10">
+            </div>
+            <div class="form-group">
+                <label for="snf">SNF %</label>
+                <input type="number" id="snf" step="0.01" placeholder="e.g., 8.50" min="0" max="10">
+            </div>
+        </div>
+        
+        <div class="form-group">
+            <label for="quantity">Quantity (Liters)</label>
+            <input type="number" id="quantity" step="0.1" placeholder="e.g., 10" value="1" min="0.1">
+        </div>
+        
+        <button onclick="calculateRate()">Calculate Price</button>
+        
+        <div id="errorMessage" class="error-message"></div>
+        <div id="successMessage" class="success-message"></div>
+        
+        <div class="result-section" id="resultSection" style="display: none;">
+            <div class="result-item">
+                <div class="result-label">Rate per Liter</div>
+                <div class="result-value" id="rateDisplay">₹ 0.00</div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="result-item">
+                <div class="result-label">Total Amount</div>
+                <div class="result-value secondary" id="totalDisplay">₹ 0.00</div>
+            </div>
+        </div>
+        
+        <div class="info-box">
+            <strong>⚠️ Terms & Conditions:</strong><br>
+            ❌ No payment if FAT &lt; 3.2% or SNF &lt; 7.5%<br>
+            ❌ Adulterated milk not acceptable
+        </div>
+        
+        <div class="history-section" id="historySection" style="display: none;">
+            <div class="history-title">Recent Calculations</div>
+            <div id="historyList"></div>
+            <div class="clear-history" onclick="clearHistory()">Clear History</div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Pragati Pricing Tables (21.05.2026)
+const pragatiPrices = {
+    // FAT ranges as keys
+    '3.20': { '7.50': 34.29, '7.60': 34.72, '7.70': 35.28, '7.80': 35.57, '7.90': 35.85, '8.00': 36.27, '8.10': 36.92, '8.20': 37.20, '8.30': 37.48, '8.40': 37.76, '8.50': 38.05, '8.60': 38.33, '8.70': 38.61, '8.80': 38.90, '8.90': 39.18, '9.00': 39.46 },
+    '3.30': { '7.50': 34.29, '7.60': 34.72, '7.70': 35.28, '7.80': 35.57, '7.90': 35.85, '8.00': 36.27, '8.10': 36.92, '8.20': 37.20, '8.30': 37.48, '8.40': 37.76, '8.50': 38.05, '8.60': 38.33, '8.70': 38.61, '8.80': 38.90, '8.90': 39.18, '9.00': 39.46 },
+    '3.40': { '7.50': 35.14, '7.60': 35.42, '7.70': 35.71, '7.80': 35.99, '7.90': 36.41, '8.00': 37.05, '8.10': 37.34, '8.20': 37.62, '8.30': 37.91, '8.40': 38.19, '8.50': 38.47, '8.60': 38.75, '8.70': 39.04, '8.80': 39.32, '8.90': 39.60, '9.00': 40.31 },
+    '3.50': { '7.50': 35.57, '7.60': 35.85, '7.70': 36.13, '7.80': 36.41, '7.90': 36.84, '8.00': 37.48, '8.10': 37.78, '8.20': 38.05, '8.30': 38.33, '8.40': 38.61, '8.50': 38.90, '8.60': 39.31, '8.70': 39.45, '8.80': 39.74, '8.90': 40.03, '9.00': 40.73 },
+    '3.60': { '7.50': 35.99, '7.60': 36.27, '7.70': 36.70, '7.80': 37.12, '7.90': 37.55, '8.00': 37.97, '8.10': 38.33, '8.20': 38.75, '8.30': 39.18, '8.40': 39.60, '8.50': 39.86, '8.60': 40.17, '8.70': 40.45, '8.80': 40.88, '8.90': 41.30, '9.00': 41.58 },
+    '3.70': { '7.50': 36.41, '7.60': 36.70, '7.70': 37.12, '7.80': 37.54, '7.90': 37.97, '8.00': 38.39, '8.10': 38.75, '8.20': 39.18, '8.30': 39.60, '8.40': 40.03, '8.50': 40.31, '8.60': 40.59, '8.70': 40.88, '8.80': 41.16, '8.90': 41.72, '9.00': 42.01 },
+    '3.80': { '7.50': 36.84, '7.60': 37.12, '7.70': 37.54, '7.80': 37.97, '7.90': 38.39, '8.00': 38.82, '8.10': 39.18, '8.20': 39.60, '8.30': 40.03, '8.40': 40.45, '8.50': 40.73, '8.60': 41.02, '8.70': 41.30, '8.80': 41.72, '8.90': 42.29, '9.00': 42.43 },
+    '3.90': { '7.50': 37.26, '7.60': 37.69, '7.70': 37.97, '7.80': 38.39, '7.90': 38.82, '8.00': 39.24, '8.10': 39.60, '8.20': 40.02, '8.30': 40.45, '8.40': 40.87, '8.50': 41.16, '8.60': 41.58, '8.70': 41.86, '8.80': 42.29, '8.90': 42.57, '9.00': 43.36 },
+    '4.00': { '7.50': 37.69, '7.60': 38.11, '7.70': 38.39, '7.80': 38.68, '7.90': 39.10, '8.00': 39.67, '8.10': 40.02, '8.20': 40.45, '8.30': 40.67, '8.40': 41.16, '8.50': 41.58, '8.60': 42.00, '8.70': 42.29, '8.80': 42.71, '8.90': 43.14, '9.00': 43.42 },
+    '4.10': { '7.50': 38.11, '7.60': 38.53, '7.70': 38.82, '7.80': 39.10, '7.90': 39.52, '8.00': 40.02, '8.10': 40.45, '8.20': 40.87, '8.30': 41.08, '8.40': 41.72, '8.50': 42.00, '8.60': 42.43, '8.70': 42.71, '8.80': 43.14, '8.90': 43.56, '9.00': 43.84 },
+    '4.20': { '7.50': 38.53, '7.60': 38.95, '7.70': 39.24, '7.80': 39.52, '7.90': 39.95, '8.00': 40.45, '8.10': 40.87, '8.20': 41.30, '8.30': 41.51, '8.40': 42.15, '8.50': 42.43, '8.60': 42.85, '8.70': 43.14, '8.80': 43.56, '8.90': 43.98, '9.00': 44.27 },
+    '4.30': { '7.50': 38.95, '7.60': 39.38, '7.70': 39.66, '7.80': 39.95, '7.90': 40.37, '8.00': 40.87, '8.10': 41.30, '8.20': 41.72, '8.30': 41.93, '8.40': 42.57, '8.50': 42.85, '8.60': 43.28, '8.70': 43.56, '8.80': 43.98, '8.90': 44.41, '9.00': 44.69 },
+    '4.40': { '7.50': 39.38, '7.60': 39.80, '7.70': 40.09, '7.80': 40.37, '7.90': 40.80, '8.00': 41.30, '8.10': 41.72, '8.20': 42.15, '8.30': 42.36, '8.40': 43.00, '8.50': 43.28, '8.60': 43.70, '8.70': 43.99, '8.80': 44.41, '8.90': 44.83, '9.00': 45.12 },
+    '4.50': { '7.50': 39.80, '7.60': 40.23, '7.70': 40.51, '7.80': 40.80, '7.90': 41.22, '8.00': 41.72, '8.10': 42.15, '8.20': 42.57, '8.30': 42.79, '8.40': 43.42, '8.50': 43.70, '8.60': 44.13, '8.70': 44.41, '8.80': 44.83, '8.90': 45.26, '9.00': 45.54 },
+    '4.60': { '7.50': 40.23, '7.60': 40.65, '7.70': 40.94, '7.80': 41.22, '7.90': 41.65, '8.00': 42.15, '8.10': 42.57, '8.20': 43.00, '8.30': 43.21, '8.40': 43.85, '8.50': 44.13, '8.60': 44.55, '8.70': 44.83, '8.80': 45.26, '8.90': 45.68, '9.00': 45.96 },
+    '4.70': { '7.50': 40.65, '7.60': 41.08, '7.70': 41.36, '7.80': 41.65, '7.90': 42.07, '8.00': 42.57, '8.10': 43.00, '8.20': 43.42, '8.30': 43.64, '8.40': 44.27, '8.50': 44.55, '8.60': 44.97, '8.70': 45.26, '8.80': 45.68, '8.90': 46.11, '9.00': 46.39 }
+};
+
+let calculationHistory = JSON.parse(localStorage.getItem('milkCalcHistory')) || [];
+
+function updateModelInfo() {
+    const model = document.getElementById('model').value;
+    const infoBox = document.getElementById('modelInfo');
+    
+    if (model === 'pragati') {
+        infoBox.innerHTML = '<strong>Pragati Milk Products</strong><br>Using official pricing table (W.E.F 21.05.2026)<br>Accurate lookup for FAT & SNF combinations';
+    } else {
+        infoBox.innerHTML = '<strong>Simple Formula</strong><br>(FAT × 6.5) + (SNF × 1.8) - 0.05<br>Quick estimation for custom pricing';
+    }
+}
+
+function interpolatePrice(fat, snf) {
+    // Round to nearest 0.01
+    fat = Math.round(fat * 100) / 100;
+    snf = Math.round(snf * 100) / 100;
+    
+    const fatKey = fat.toFixed(2);
+    const snfKey = snf.toFixed(2);
+    
+    // Direct lookup
+    if (pragatiPrices[fatKey] && pragatiPrices[fatKey][snfKey]) {
+        return pragatiPrices[fatKey][snfKey];
+    }
+    
+    // Interpolation logic for values not in table
+    const fatKeys = Object.keys(pragatiPrices).map(Number).sort((a, b) => a - b);
+    const snfKeys = ['7.50', '7.60', '7.70', '7.80', '7.90', '8.00', '8.10', '8.20', '8.30', '8.40', '8.50', '8.60', '8.70', '8.80', '8.90', '9.00'].map(Number).sort((a, b) => a - b);
+    
+    let fat1 = fatKeys[0], fat2 = fatKeys[fatKeys.length - 1];
+    for (let i = 0; i < fatKeys.length - 1; i++) {
+        if (fat >= fatKeys[i] && fat <= fatKeys[i + 1]) {
+            fat1 = fatKeys[i];
+            fat2 = fatKeys[i + 1];
+            break;
+        }
+    }
+    
+    let snf1 = snfKeys[0], snf2 = snfKeys[snfKeys.length - 1];
+    for (let i = 0; i < snfKeys.length - 1; i++) {
+        if (snf >= snfKeys[i] && snf <= snfKeys[i + 1]) {
+            snf1 = snfKeys[i];
+            snf2 = snfKeys[i + 1];
+            break;
+        }
+    }
+    
+    // Bilinear interpolation
+    const p11 = pragatiPrices[fat1.toFixed(2)][snf1.toFixed(2)];
+    const p12 = pragatiPrices[fat1.toFixed(2)][snf2.toFixed(2)];
+    const p21 = pragatiPrices[fat2.toFixed(2)][snf1.toFixed(2)];
+    const p22 = pragatiPrices[fat2.toFixed(2)][snf2.toFixed(2)];
+    
+    const tx = (fat - fat1) / (fat2 - fat1);
+    const ty = (snf - snf1) / (snf2 - snf1);
+    
+    const p1 = p11 * (1 - tx) + p21 * tx;
+    const p2 = p12 * (1 - tx) + p22 * tx;
+    const price = p1 * (1 - ty) + p2 * ty;
+    
+    return price;
+}
+
+function calculateRate() {
+    const fat = parseFloat(document.getElementById('fat').value);
+    const snf = parseFloat(document.getElementById('snf').value);
+    const quantity = parseFloat(document.getElementById('quantity').value) || 1;
+    const model = document.getElementById('model').value;
+    
+    const errorDiv = document.getElementById('errorMessage');
+    const successDiv = document.getElementById('successMessage');
+    const resultSection = document.getElementById('resultSection');
+    const rateDiv = document.getElementById('rateDisplay');
+    const totalDiv = document.getElementById('totalDisplay');
+    
+    errorDiv.classList.remove('show');
+    successDiv.classList.remove('show');
+    
+    // Validation
+    if (isNaN(fat) || isNaN(snf)) {
+        errorDiv.textContent = '❌ Please enter valid FAT and SNF values.';
+        errorDiv.classList.add('show');
+        resultSection.style.display = 'none';
+        return;
+    }
+    
+    // Rejection threshold
+    if (fat < 3.2 || snf < 7.5) {
+        errorDiv.textContent = '❌ No Payment: FAT < 3.2% or SNF < 7.5%';
+        errorDiv.classList.add('show');
+        resultSection.style.display = 'none';
+        return;
+    }
+    
+    let ratePerLiter;
+    let method;
+    
+    if (model === 'pragati') {
+        ratePerLiter = interpolatePrice(fat, snf);
+        method = 'Pragati';
+    } else {
+        ratePerLiter = (fat * 6.5) + (snf * 1.8) - 0.05;
+        method = 'Formula';
+    }
+    
+    const totalAmount = ratePerLiter * quantity;
+    
+    rateDiv.textContent = '₹ ' + ratePerLiter.toFixed(2);
+    totalDiv.textContent = '₹ ' + totalAmount.toFixed(2);
+    
+    resultSection.style.display = 'block';
+    successDiv.textContent = `✅ Calculated using ${method} model`;
+    successDiv.classList.add('show');
+    
+    // Add to history
+    addToHistory(fat, snf, quantity, ratePerLiter, totalAmount);
+}
+
+function addToHistory(fat, snf, qty, rate, total) {
+    const entry = {
+        timestamp: new Date().toLocaleString(),
+        fat: fat.toFixed(2),
+        snf: snf.toFixed(2),
+        qty: qty.toFixed(1),
+        rate: rate.toFixed(2),
+        total: total.toFixed(2)
+    };
+    
+    calculationHistory.unshift(entry);
+    if (calculationHistory.length > 10) calculationHistory.pop();
+    
+    localStorage.setItem('milkCalcHistory', JSON.stringify(calculationHistory));
+    displayHistory();
+}
+
+function displayHistory() {
+    const historySection = document.getElementById('historySection');
+    const historyList = document.getElementById('historyList');
+    
+    if (calculationHistory.length === 0) {
+        historySection.style.display = 'none';
+        return;
+    }
+    
+    historySection.style.display = 'block';
+    historyList.innerHTML = calculationHistory.map(entry => `
+        <div class="history-item">
+            <span>FAT ${entry.fat}% + SNF ${entry.snf}% × ${entry.qty}L</span>
+            <span class="price">₹${entry.total}</span>
+        </div>
+    `).join('');
+}
+
+function clearHistory() {
+    calculationHistory = [];
+    localStorage.removeItem('milkCalcHistory');
+    displayHistory();
+}
+
+// Initialize
+updateModelInfo();
+displayHistory();
+</script>
+
+</body>
+</html>
